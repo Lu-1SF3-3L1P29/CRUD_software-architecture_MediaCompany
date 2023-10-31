@@ -1,3 +1,3 @@
-from app import inicio
+from app import create_app
 
-app = inicio()
+app = create_app()

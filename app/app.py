@@ -8,11 +8,16 @@ from werkzeug.utils import secure_filename
 
 
 #Declarando nombre de la aplicación e inicializando, crear la aplicación Flask
-app = Flask(__name__)
-application = app
+
+def create_app():
+  app = Flask(__name__)
+  application = app
+  return app
 
 msg  =''
 tipo =''
+
+
 
 
 
