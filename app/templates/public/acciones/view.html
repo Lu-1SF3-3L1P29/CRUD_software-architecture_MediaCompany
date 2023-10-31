@@ -1,0 +1,47 @@
+{% extends 'public/layout.html' %}
+{% block title %}Registrar Subcriptor{% endblock %}
+
+{% block body %}
+
+
+<section>
+    <h2>
+        <a href="/" class="left" title="Volver"><i class="bi bi-arrow-left-circle"></i></a>
+        Detalles del Subcriptor
+        <hr>
+    </h2>
+
+    {% if (infoSub) %}
+    
+    <!-- {{ infoCarro }} -->
+
+
+    <div class="card" style="width: 25rem;">
+      {% set urlSub = '/static/assets/fotos_subs/' %}
+        {% if(infoSub.foto) %}
+          <img src="{{ urlSub }}{{ infoSub.foto }}" class="card-img-top" alt="sub">
+        {% else %}
+          <img src="{{ urlSub }}sin_foto.jpg" class="card-img-top sin_foto" alt="sub">
+        {% endif %}
+
+        <div class="card-body">
+          <h5 class="card-title"> <strong>{{ infoSub.nombre }}</strong></h5>
+        </div>
+
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">Nombre: <strong>{{ infoSub.nombre }}</strong></li>
+          <li class="list-group-item">Edad: <strong>{{ infoSub.edad }}</strong></li>
+        </ul>
+      </div>
+
+      {% else %}
+      <div class="col-12">
+          <h2 class="text-center">
+              No existe el Subcriptor
+          </h2>
+      </div>
+{% endif %}
+
+</section>
+
+{% endblock %}

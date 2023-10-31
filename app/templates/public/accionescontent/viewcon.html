@@ -1,0 +1,44 @@
+{% extends 'public/layout.html' %}
+{% block title %}Registrar Contenido multimedia{% endblock %}
+
+{% block bodycon %}
+
+
+<section>
+    <h2>
+        <a href="/" class="left" title="Volver"><i class="bi bi-arrow-left-circle"></i></a>
+        Detalles del Contenido
+        <hr>
+    </h2>
+
+    {% if (infoCon) %}
+    
+
+
+    <div class="card" style="width: 25rem;">
+      {% set urlCon = '/static/assets/fotos_cont/' %}
+        {% if(infoCon.foto) %}
+          <img src="{{ urlCon }}{{ infoCon.foto }}" class="card-img-top" alt="content">
+        {% else %}
+          <img src="{{ urlCon}}sin_foto.jpg" class="card-img-top sin_foto" alt="content">
+        {% endif %}
+
+        <div class="card-body">
+        </div>
+
+        <ul class="list-group list-group-flush">
+
+        </ul>
+      </div>
+
+      {% else %}
+      <div class="col-12">
+          <h2 class="text-center">
+              No existe tal Contenido multimedia
+          </h2>
+      </div>
+{% endif %}
+
+</section>
+
+{% endblock %}

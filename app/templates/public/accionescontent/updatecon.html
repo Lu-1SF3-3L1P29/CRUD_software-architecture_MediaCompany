@@ -1,0 +1,45 @@
+{% extends 'public/layout.html' %}
+{% block title %}Registrar contenido multimedia{% endblock %}
+
+{% block bodycon %}
+
+
+<section>
+    <h2>
+        <a href="/" class="left" title="Volver"><i class="bi bi-arrow-left-circle"></i></a>
+        Actualizar Contenido multimedia
+        <hr>
+    </h2>
+
+    {% if (dataInfo) %}
+      <form action="{{ url_for('formActualizarCon', idCon = dataInfo.id ) }}" method="POST" class="mb-3" autocomplete="off" enctype="multipart/form-data">
+        <input type="text" class="form-control" name="id" value="{{ dataInfo.id }}" required hidden>
+        <div class="row">
+            {% set urlCon = '/static/assets/fotos_cont/' %}
+            <div class="col-md-6">
+                {% if(dataInfo.foto !="") %}
+                        <img src="{{ urlCon }}{{ dataInfo.foto }}" class="foto_update" alt="{{ dataInfo.nombre }}">
+                    {% else %}
+                        <img src="{{ urlCon }}sin_foto.jpg" class="foto_update" alt="con">
+                {% endif %}
+            </div>
+            <div class="col-md-6">
+                <label for="foto">Cambiar contenido multimedia</label>
+                <input type="file" name="foto" class="form-control-file" accept="image/*">
+            </div>
+        </div>
+        <hr>
+        <input class="button-primary mt-3 btn btn-info btn-block bold" type="submit" value="Guardar Actualización">
+    </form>
+
+      {% else %}
+      <div class="col-12">
+          <h2 class="text-center">
+              No existe tal contenido multimedia
+          </h2>
+      </div>
+{% endif %}
+
+</section>
+
+{% endblock %}
