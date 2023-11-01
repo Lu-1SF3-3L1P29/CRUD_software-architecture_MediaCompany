@@ -7,7 +7,7 @@ import os
 from werkzeug.utils import secure_filename 
 
 
-#Declarando nombre de la aplicación e inicializando, crear la aplicación Flask
+#aDeclarando nombre de la aplicación e inicializando, crear la aplicación Flask
 
 
 app = Flask(__name__)
