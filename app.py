@@ -17,7 +17,7 @@ application = app
 msg  =''
 tipo =''
 
-
+app.config['SQLALCHEMY_DATABASE_URI']='mysql+pymysql://sql10658339:tI6ZDDAk7d@sql10.freesqldatabase.com/sql10658339'
 
 
 
@@ -299,3 +299,5 @@ def not_found(error):
     
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=10000)
+
+    
