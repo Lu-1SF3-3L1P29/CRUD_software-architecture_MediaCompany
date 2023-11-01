@@ -13,10 +13,6 @@ from werkzeug.utils import secure_filename
 app = Flask(__name__)
 application = app
 
-FLASK_DEBUG = True
-FLASK_RUN_HOST="0.0.0.0"
-FLASK_RUN_PORT=10000
-
 msg  =''
 tipo =''
 
