@@ -4,9 +4,9 @@ import mysql.connector
 
 def connectionBD():
     mydb = mysql.connector.connect(
-        host ="mediacompany",
+        host ="dpg-cl0pl6gp2gis738ukop0-a",
         user ="mediacompanyusers",
-        passwd ="",
+        passwd ="ZUJ5PNy4pRuqOSj2NC7pc6LVf9cEe5iX",
         database = "mediacompany"
         )
     if mydb:
