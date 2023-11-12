@@ -1,0 +1,34 @@
+{% extends 'public/layoutad.html' %}
+{% block title %}Registrar Publicidad{% endblock %}
+
+{% block bodyad %}
+
+
+<section>
+    <h2>
+        <a href="/" class="left" title="Volver"><i class="bi bi-arrow-left-circle"></i></a>
+        Registrar Nueva Publicidad
+        <hr>
+    </h2>
+
+    <form action="{{ url_for('formAddad') }}" method="POST" class="mb-3" autocomplete="off" enctype="multipart/form-data">
+        <div class="row mt-4">
+            <div class="col">
+                <label for="nombre">Nombre de anunciante</label>
+                <input type="text" name="nombre" class="form-control" required>
+            
+                <label for="modelo">Precio</label>
+                <input type="text" name="precio" class="form-control" required>
+
+                <label for="foto">Imagen publicitaria</label>
+                <input type="file" name="foto" class="form-control-file" accept="image/*" required>
+            </div>
+        </div>
+
+        <hr>
+
+        <input class="button-primary mt-3 btn btn-info btn-block bold" type="submit" value="Guardar Registro">
+    </form>
+</section>
+
+{% endblock %}

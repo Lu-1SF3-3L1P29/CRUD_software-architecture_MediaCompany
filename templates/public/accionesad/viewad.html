@@ -1,0 +1,47 @@
+{% extends 'public/layoutad.html' %}
+{% block title %}Registrar Publicidad{% endblock %}
+
+{% block bodyad %}
+
+
+<section>
+    <h2>
+        <a href="/" class="left" title="Volver"><i class="bi bi-arrow-left-circle"></i></a>
+        Detalles de la Publicidad
+        <hr>
+    </h2>
+
+    {% if (infoad) %}
+    
+    <!-- {{ infoCarro }} -->
+
+
+    <div class="card" style="width: 25rem;">
+      {% set urlad = '/static/assets/fotos_ad/' %}
+        {% if(infoad.foto) %}
+          <img src="{{ urlad }}{{ infoad.foto }}" class="card-img-top" alt="ad">
+        {% else %}
+          <img src="{{ urlad }}sin_foto.jpg" class="card-img-top sin_foto" alt="ad">
+        {% endif %}
+
+        <div class="card-body">
+          <h5 class="card-title"> <strong>{{ infoad.nombre }}</strong></h5>
+        </div>
+
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">Nombre: <strong>{{ infoad.nombre }}</strong></li>
+          <li class="list-group-item">Precio: <strong>{{ infoad.precio }}</strong></li>
+        </ul>
+      </div>
+
+      {% else %}
+      <div class="col-12">
+          <h2 class="text-center">
+              No existe tal Publicidad
+          </h2>
+      </div>
+{% endif %}
+
+</section>
+
+{% endblock %}

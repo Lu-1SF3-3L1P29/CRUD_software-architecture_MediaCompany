@@ -4,11 +4,11 @@ from conexionBD import *  #Importando conexion BD
 
 
 #Creando una funcion para obtener la lista de carros.
-def listaCon():
+def listaad():
     conexion_MySQLdb = connectionBD() #creando mi instancia a la conexion de BD
-    cur      = conexion_MySQLdb.cursor(dictionary=False)
+    cur      = conexion_MySQLdb.cursor(dictionary=True)
 
-    querySQL = "SELECT * FROM content ORDER BY id DESC"
+    querySQL = "SELECT * FROM ad ORDER BY id DESC"
     cur.execute(querySQL) 
     resultadoBusqueda = cur.fetchall() #fetchall () Obtener todos los registros
     totalBusqueda = len(resultadoBusqueda) #Total de busqueda
@@ -20,22 +20,22 @@ def listaCon():
 
 
 
-def updateCon(id=''):
+def updatead(id=''):
         conexion_MySQLdb = connectionBD()
-        cursor = conexion_MySQLdb.cursor(dictionary=False)
+        cursor = conexion_MySQLdb.cursor(dictionary=True)
         
-        cursor.execute("SELECT * FROM content WHERE id = %s LIMIT 1", [id])
+        cursor.execute("SELECT * FROM ad WHERE id = %s LIMIT 1", [id])
         resultQueryData = cursor.fetchone() #Devolviendo solo 1 registro
         return resultQueryData
     
     
     
-def registrarCon(nuevoNombreFilecon=''):       
+def registrarad(nombre='', precio='', nuevoNombreFilead=''):       
         conexion_MySQLdb = connectionBD()
-        cursor           = conexion_MySQLdb.cursor(dictionary=False)
+        cursor           = conexion_MySQLdb.cursor(dictionary=True)
             
-        sql         = ("INSERT INTO content(foto) VALUES (%s)")
-        valores     = (nuevoNombreFilecon)
+        sql         = ("INSERT INTO ad(nombre, precio, foto) VALUES (%s,%s,%s)")
+        valores     = (nombre, precio, nuevoNombreFilead)
         cursor.execute(sql, valores)
         conexion_MySQLdb.commit()
         cursor.close() #Cerrando conexion SQL
@@ -46,11 +46,11 @@ def registrarCon(nuevoNombreFilecon=''):
         return resultado_insert
   
 
-def detallesCon(idCon):
+def detallesad(idad):
         conexion_MySQLdb = connectionBD()
-        cursor = conexion_MySQLdb.cursor(dictionary=False)
+        cursor = conexion_MySQLdb.cursor(dictionary=True)
         
-        cursor.execute("SELECT * FROM content WHERE id ='%s'" % (idCon,))
+        cursor.execute("SELECT * FROM ad WHERE id ='%s'" % (idad,))
         resultadoQuery = cursor.fetchone()
         cursor.close() #cerrando conexion de la consulta sql
         conexion_MySQLdb.close() #cerrando conexion de la BD
@@ -59,15 +59,17 @@ def detallesCon(idCon):
     
     
 
-def  recibeActualizarCon(nuevoNombreFilecon, idCon):
+def  recibeActualizarad(nombre, precio, nuevoNombreFilead, idad):
         conexion_MySQLdb = connectionBD()
-        cur = conexion_MySQLdb.cursor(dictionary=False)
+        cur = conexion_MySQLdb.cursor(dictionary=True)
         cur.execute("""
-            UPDATE content
+            UPDATE ad
             SET 
+                nombre   = %s,
+                precio  = %s,
                 foto    = %s
             WHERE id=%s
-            """, (nuevoNombreFilecon,  idCon))
+            """, (nombre, precio, nuevoNombreFilead, idad))
         conexion_MySQLdb.commit()
         
         cur.close() #cerrando conexion de la consulta sql

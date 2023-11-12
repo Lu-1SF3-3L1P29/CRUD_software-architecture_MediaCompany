@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from controller.controllerSub import *
 from controller.controllerCon import *
+from controller.controllerad import *
 
 #Para subir archivo tipo foto al servidor
 import os
@@ -20,7 +21,7 @@ app.config['SQLALCHEMY_DATABASE_URI']='mysql+pymysql://sql10658339:tI6ZDDAk7d@sq
 
 
 
-@app.route('/', methods=['GET','POST'])
+@app.route('/lsub', methods=['GET','POST'])
 def inicio():
     return render_template('public/layout.html', miData = listaSub())
 
@@ -156,9 +157,9 @@ def recibeFoto(file):
     return nuevoNombreFile
 
        
-@app.route('/', methods=['GET','POST'])
+@app.route('/lcon', methods=['GET','POST'])
 def iniciocon():
-    return render_template('public/layout.html', miDatacon = listaCon())
+    return render_template('public/layoutcon.html', miDatacon = listaCon())
 
 
 #RUTAS
@@ -176,14 +177,14 @@ def formAddCon():
         
         if(request.files['foto'] !=''):
             file     = request.files['foto'] #recibiendo el archivo
-            nuevoNombreFile = recibeFoto(file) #Llamado la funcion que procesa la imagen
-            resultData = registrarCon(file)
+            nuevoNombreFilecon = recibeFotocon(file) #Llamado la funcion que procesa la imagen
+            resultData = registrarCon(nuevoNombreFilecon)
             if(resultData ==1):
-                return render_template('public/layout.html', miData = listaCon(), msg='El Registro fue un éxito', tipo=1)
+                return render_template('public/layoutcon.html', miDatacon = listaCon(), msg='El Registro fue un éxito', tipo=1)
             else:
-                return render_template('public/layout.html', msg = 'Metodo HTTP incorrecto', tipo=1)   
+                return render_template('public/layoutcon.html', msg = 'Metodo HTTP incorrecto', tipo=1)   
         else:
-            return render_template('public/layout.html', msg = 'Debe cargar una foto', tipo=1)
+            return render_template('public/layoutcon.html', msg = 'Debe cargar una foto', tipo=1)
             
 
 
@@ -194,9 +195,9 @@ def formViewUpdatecon(id):
         if resultData:
             return render_template('public/accionescontent/updatecon.html',  dataInfo = resultData)
         else:
-            return render_template('public/layout.html', miData = listaCon(), msg='No existe contenido', tipo= 1)
+            return render_template('public/layoutcon.html', miDatacon = listaCon(), msg='No existe contenido', tipo= 1)
     else:
-        return render_template('public/layout.html', miData = listaCon(), msg = 'Metodo HTTP incorrecto', tipo=1)          
+        return render_template('public/layoutcon.html', miDatacon = listaCon(), msg = 'Metodo HTTP incorrecto', tipo=1)          
  
    
   
@@ -209,7 +210,7 @@ def viewDetalleCon(idCon):
         if resultData:
             return render_template('public/accionescontent/viewcon.html', infoCon = resultData, msg='Detalles del contenido', tipo=1)
         else:
-            return render_template('public/acciones/layout.html', msg='No existe tal contenido', tipo=1)
+            return render_template('public/acciones/layoutcon.html', msg='No existe tal contenido', tipo=1)
     return redirect(url_for('inicio'))
     
 
@@ -221,17 +222,17 @@ def  formActualizarCon(idCon):
         #Script para recibir el archivo (foto)
         if(request.files['foto']):
             file     = request.files['foto']
-            fotoForm = recibeFoto(file)
+            fotoForm = recibeFotocon(file)
             resultData = recibeActualizarCon(fotoForm, idCon)
         else:
             fotoCon  ='sin_foto.jpg'
             resultData = recibeActualizarCon(fotoCon, idCon)
 
         if(resultData ==1):
-            return render_template('public/layout.html', miData = listaCon(), msg='Datos del contenido actualizados', tipo=1)
+            return render_template('public/layoutcon.html', miDatacon = listaCon(), msg='Datos del contenido actualizados', tipo=1)
         else:
             msg ='No se actualizo el registro'
-            return render_template('public/layout.html', miData = listaCon(), msg='No se pudo actualizar', tipo=1)
+            return render_template('public/layoutcon.html', miDatacon = listaCon(), msg='No se pudo actualizar', tipo=1)
 
 
 #Eliminar carro
@@ -279,13 +280,145 @@ def recibeFotocon(file):
 
     #capturando extensión del archivo ejemplo: (.png, .jpg, .pdf ...etc)
     extension           = os.path.splitext(filename)[1]
-    nuevoNombreFile     = stringAleatorio() + extension
+    nuevoNombreFilecon     = stringAleatorio() + extension
     #print(nuevoNombreFile)
         
-    upload_path = os.path.join (basepath, 'static/assets/fotos_cont', nuevoNombreFile) 
+    upload_path = os.path.join (basepath, 'static/assets/fotos_cont', nuevoNombreFilecon) 
     file.save(upload_path)
 
-    return nuevoNombreFile
+    return nuevoNombreFilecon
+
+
+@app.route('/lad', methods=['GET','POST'])
+def inicioad():
+    return render_template('public/layoutad.html', miDataad = listaad())
+
+#RUTAS
+@app.route('/registrar-ad', methods=['GET','POST'])
+def addad():
+    return render_template('public/accionesad/addad.html')
+
+@app.route('/ad', methods=['POST'])
+def formAddad():
+    if request.method == 'POST':
+        nombre               = request.form['nombre']
+        precio              = request.form['precio']
+
+        
+        
+        if(request.files['foto'] !=''):
+            file     = request.files['foto'] #recibiendo el archivo
+            nuevoNombreFilead = recibeFotoad(file) #Llamado la funcion que procesa la imagen
+            resultData = registrarad(nombre, precio, nuevoNombreFilead)
+            if(resultData ==1):
+                return render_template('public/layoutad.html', miDataad = listaad(), msg='El Registro fue un éxito', tipo=1)
+            else:
+                return render_template('public/layoutad.html', msg = 'Metodo HTTP incorrecto', tipo=1)   
+        else:
+            return render_template('public/layoutad.html', msg = 'Debe cargar una foto', tipo=1)
+            
+
+
+@app.route('/form-update-ad/<string:id>', methods=['GET','POST'])
+def formViewUpdatead(id):
+    if request.method == 'GET':
+        resultData = updatead(id)
+        if resultData:
+            return render_template('public/acciones/update.html',  dataInfo = resultData)
+        else:
+            return render_template('public/layoutad.html', miDataad = listaad(), msg='No existe tal publicidad', tipo= 1)
+    else:
+        return render_template('public/layoutad.html', miDataad = listaad(), msg = 'Metodo HTTP incorrecto', tipo=1)          
+ 
+   
+  
+@app.route('/ver-detalles-ad/<int:idad>', methods=['GET', 'POST'])
+def viewDetallead(idad):
+    msg =''
+    if request.method == 'GET':
+        resultData = detallesad(idad) #Funcion que almacena los detalles del carro
+        
+        if resultData:
+            return render_template('public/acciones/view.html', infoad = resultData, msg='Detalles de la publicidad', tipo=1)
+        else:
+            return render_template('public/acciones/layoutad.html', msg='No existe tal publicidad', tipo=1)
+    return redirect(url_for('inicio'))
+    
+
+@app.route('/actualizar-ad/<string:idad>', methods=['POST'])
+def  formActualizarad(idad):
+    if request.method == 'POST':
+        nombre           = request.form['nombre']
+        precio          = request.form['precio']
+        
+        #Script para recibir el archivo (foto)
+        if(request.files['foto']):
+            file     = request.files['foto']
+            fotoForm = recibeFotoad(file)
+            resultData = recibeActualizarad(nombre,precio, fotoForm, idad)
+        else:
+            fotoad  ='sin_foto.jpg'
+            resultData = recibeActualizarad(nombre, precio , fotoad, idad)
+
+        if(resultData ==1):
+            return render_template('public/layoutad.html', miDataad = listaad(), msg='Datos de la publicidad actualizados', tipo=1)
+        else:
+            msg ='No se actualizo el registro'
+            return render_template('public/layoutad.html', miDataad = listaad(), msg='No se pudo actualizar', tipo=1)
+
+
+#Eliminar carro
+@app.route('/borrar-ad', methods=['GET', 'POST'])
+def formViewBorrarad():
+    if request.method == 'POST':
+        idad         = request.form['id']
+        nombreFoto      = request.form['nombreFoto']
+        resultData      = eliminarad(idad, nombreFoto)
+
+        if resultData ==1:
+            #Nota: retorno solo un json y no una vista para evitar refescar la vista
+            return jsonify([1])
+            #return jsonify(["respuesta", 1])
+        else: 
+            return jsonify([0])
+
+
+
+
+def eliminarad(idad='', nombreFoto=''):
+        
+    conexion_MySQLdb = connectionBD() #Hago instancia a mi conexion desde la funcion
+    cur              = conexion_MySQLdb.cursor(dictionary=True)
+    
+    cur.execute('DELETE FROM ad WHERE id=%s', (idad,))
+    conexion_MySQLdb.commit()
+    resultado_eliminar = cur.rowcount #retorna 1 o 0
+    #print(resultado_eliminar)
+    
+    basepath = os.path.dirname (__file__) #C:\xampp\htdocs\localhost\Crud-con-FLASK-PYTHON-y-MySQL\app
+    url_File = os.path.join (basepath, 'static/assets/fotos_ad', nombreFoto)
+    os.remove(url_File) #Borrar foto desde la carpeta
+    #os.unlink(url_File) #Otra forma de borrar archivos en una carpeta
+    
+
+    return resultado_eliminar
+
+
+
+def recibeFotoad(file):
+    print(file)
+    basepath = os.path.dirname (__file__) #La ruta donde se encuentra el archivo actual
+    filename = secure_filename(file.filename) #Nombre original del archivo
+
+    #capturando extensión del archivo ejemplo: (.png, .jpg, .pdf ...etc)
+    extension           = os.path.splitext(filename)[1]
+    nuevoNombreFilead     = stringAleatorio() + extension
+    #print(nuevoNombreFile)
+        
+    upload_path = os.path.join (basepath, 'static/assets/fotos_ad', nuevoNombreFilead) 
+    file.save(upload_path)
+
+    return nuevoNombreFilead
 
   
 #Redireccionando cuando la página no existe
