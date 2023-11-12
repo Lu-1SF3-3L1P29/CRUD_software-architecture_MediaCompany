@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from controller.controllerSub import *
-from controller.controllerCon import *
+from controller.controllercon import *
 from controller.controllerad import *
 
 #Para subir archivo tipo foto al servidor
@@ -159,28 +159,28 @@ def recibeFoto(file):
        
 @app.route('/lcon', methods=['GET','POST'])
 def iniciocon():
-    return render_template('public/layoutcon.html', miDatacon = listaCon())
+    return render_template('public/layoutcon.html', miDatacon = listacon())
 
 
 #RUTAS
 @app.route('/registrar-con', methods=['GET','POST'])
-def addCon():
+def addcon():
     return render_template('public/accionescontent/addcon.html')
 
 
  
-#Registrando nuevo carro
+#Registrando nuevo contenido
 @app.route('/con', methods=['POST'])
-def formAddCon():
+def formAddcon():
     if request.method == 'POST':
+        nombre = request.form['nombre']
 
-        
         if(request.files['foto'] !=''):
             file     = request.files['foto'] #recibiendo el archivo
             nuevoNombreFilecon = recibeFotocon(file) #Llamado la funcion que procesa la imagen
-            resultData = registrarCon(nuevoNombreFilecon)
+            resultData = registrarcon(nombre, nuevoNombreFilecon)
             if(resultData ==1):
-                return render_template('public/layoutcon.html', miDatacon = listaCon(), msg='El Registro fue un éxito', tipo=1)
+                return render_template('public/layoutcon.html', miDatacon = listacon(), msg='El Registro fue un éxito', tipo=1)
             else:
                 return render_template('public/layoutcon.html', msg = 'Metodo HTTP incorrecto', tipo=1)   
         else:
@@ -191,57 +191,57 @@ def formAddCon():
 @app.route('/form-update-con/<string:id>', methods=['GET','POST'])
 def formViewUpdatecon(id):
     if request.method == 'GET':
-        resultData = updateCon(id)
+        resultData = updatecon(id)
         if resultData:
             return render_template('public/accionescontent/updatecon.html',  dataInfo = resultData)
         else:
-            return render_template('public/layoutcon.html', miDatacon = listaCon(), msg='No existe contenido', tipo= 1)
+            return render_template('public/layoutcon.html', miDatacon = listacon(), msg='No existe contenido', tipo= 1)
     else:
-        return render_template('public/layoutcon.html', miDatacon = listaCon(), msg = 'Metodo HTTP incorrecto', tipo=1)          
+        return render_template('public/layoutcon.html', miDatacon = listacon(), msg = 'Metodo HTTP incorrecto', tipo=1)          
  
    
   
-@app.route('/ver-detalles-con/<int:idCon>', methods=['GET', 'POST'])
-def viewDetalleCon(idCon):
+@app.route('/ver-detalles-con/<int:idcon>', methods=['GET', 'POST'])
+def viewDetallecon(idcon):
     msg =''
     if request.method == 'GET':
-        resultData = detallesCon(idCon) #Funcion que almacena los detalles del carro
+        resultData = detallescon(idcon) #Funcion que almacena los detalles del carro
         
         if resultData:
-            return render_template('public/accionescontent/viewcon.html', infoCon = resultData, msg='Detalles del contenido', tipo=1)
+            return render_template('public/accionescontent/viewcon.html', infocon = resultData, msg='Detalles del contenido', tipo=1)
         else:
-            return render_template('public/acciones/layoutcon.html', msg='No existe tal contenido', tipo=1)
+            return render_template('public/layoutcon.html', msg='No existe tal contenido', tipo=1)
     return redirect(url_for('inicio'))
     
 
-@app.route('/actualizar-con/<string:idCon>', methods=['POST'])
-def  formActualizarCon(idCon):
+@app.route('/actualizar-con/<string:idcon>', methods=['POST'])
+def  formActualizarcon(idcon):
     if request.method == 'POST':
-
+        nombre           = request.form['nombre']
         
         #Script para recibir el archivo (foto)
         if(request.files['foto']):
             file     = request.files['foto']
             fotoForm = recibeFotocon(file)
-            resultData = recibeActualizarCon(fotoForm, idCon)
+            resultData = recibeActualizarcon(nombre, fotoForm, idcon)
         else:
-            fotoCon  ='sin_foto.jpg'
-            resultData = recibeActualizarCon(fotoCon, idCon)
+            fotocon  ='sin_foto.jpg'
+            resultData = recibeActualizarcon(nombre,fotocon, idcon)
 
         if(resultData ==1):
-            return render_template('public/layoutcon.html', miDatacon = listaCon(), msg='Datos del contenido actualizados', tipo=1)
+            return render_template('public/layoutcon.html', miDatacon = listacon(), msg='Datos del contenido actualizados', tipo=1)
         else:
             msg ='No se actualizo el registro'
-            return render_template('public/layoutcon.html', miDatacon = listaCon(), msg='No se pudo actualizar', tipo=1)
+            return render_template('public/layoutcon.html', miDatacon = listacon(), msg='No se pudo actualizar', tipo=1)
 
 
 #Eliminar carro
 @app.route('/borrar-con', methods=['GET', 'POST'])
-def formViewBorrarCon():
+def formViewBorrarcon():
     if request.method == 'POST':
-        idCon         = request.form['id']
+        idcon         = request.form['id']
         nombreFoto      = request.form['nombreFoto']
-        resultData      = eliminarCon(idCon, nombreFoto)
+        resultData      = eliminarcon(idcon, nombreFoto)
 
         if resultData ==1:
             #Nota: retorno solo un json y no una vista para evitar refescar la vista
@@ -253,12 +253,12 @@ def formViewBorrarCon():
 
 
 
-def eliminarCon(idCon='', nombreFoto=''):
+def eliminarcon(idcon='', nombreFoto=''):
         
     conexion_MySQLdb = connectionBD() #Hago instancia a mi conexion desde la funcion
     cur              = conexion_MySQLdb.cursor(dictionary=True)
     
-    cur.execute('DELETE FROM content WHERE id=%s', (idCon,))
+    cur.execute('DELETE FROM content WHERE id=%s', (idcon,))
     conexion_MySQLdb.commit()
     resultado_eliminar = cur.rowcount #retorna 1 o 0
     #print(resultado_eliminar)
@@ -324,7 +324,7 @@ def formViewUpdatead(id):
     if request.method == 'GET':
         resultData = updatead(id)
         if resultData:
-            return render_template('public/acciones/update.html',  dataInfo = resultData)
+            return render_template('public/accionesad/updatead.html',  dataInfo = resultData)
         else:
             return render_template('public/layoutad.html', miDataad = listaad(), msg='No existe tal publicidad', tipo= 1)
     else:
@@ -339,9 +339,9 @@ def viewDetallead(idad):
         resultData = detallesad(idad) #Funcion que almacena los detalles del carro
         
         if resultData:
-            return render_template('public/acciones/view.html', infoad = resultData, msg='Detalles de la publicidad', tipo=1)
+            return render_template('public/accionesad/viewad.html', infoad = resultData, msg='Detalles de la publicidad', tipo=1)
         else:
-            return render_template('public/acciones/layoutad.html', msg='No existe tal publicidad', tipo=1)
+            return render_template('public/layoutad.html', msg='No existe tal publicidad', tipo=1)
     return redirect(url_for('inicio'))
     
 

@@ -6,21 +6,29 @@
 
 <section>
     <h2>
-        <a href="/" class="left" title="Volver"><i class="bi bi-arrow-left-circle"></i></a>
+        <a href="/lcon" class="left" title="Volver"><i class="bi bi-arrow-left-circle"></i></a>
         Actualizar Contenido multimedia
         <hr>
     </h2>
 
     {% if (dataInfo) %}
-      <form action="{{ url_for('formActualizarCon', idCon = dataInfo.id ) }}" method="POST" class="mb-3" autocomplete="off" enctype="multipart/form-data">
+      <form action="{{ url_for('formActualizarcon', idcon = dataInfo.id ) }}" method="POST" class="mb-3" autocomplete="off" enctype="multipart/form-data">
         <input type="text" class="form-control" name="id" value="{{ dataInfo.id }}" required hidden>
+        
         <div class="row">
-            {% set urlCon = '/static/assets/fotos_cont/' %}
+            <div class="col">
+                <label for="nombre">Titulo</label>
+                <input type="text" name="nombre" value="{{ dataInfo.nombre }}" class="form-control">
+            </div>
+        </div>
+        
+        <div class="row">
+            {% set urlcon = '/static/assets/fotos_cont/' %}
             <div class="col-md-6">
                 {% if(dataInfo.foto !="") %}
-                        <img src="{{ urlCon }}{{ dataInfo.foto }}" class="foto_update" alt="{{ dataInfo.nombre }}">
+                        <img src="{{ urlcon }}{{ dataInfo.foto }}" class="foto_update" alt="{{ dataInfo.nombre }}">
                     {% else %}
-                        <img src="{{ urlCon }}sin_foto.jpg" class="foto_update" alt="con">
+                        <img src="{{ urlcon }}sin_foto.jpg" class="foto_update" alt="con">
                 {% endif %}
             </div>
             <div class="col-md-6">

@@ -83,54 +83,7 @@
       });
 
     }  
-
-    function eliminarConJavaScript(id) {
-      const idR = document.querySelector('#id_'+ id);
-      nombreFoto = idR.dataset.foto;
-
-      let li = document.querySelector('#Registro_' + id);
-
-      var urlForm = "{{ url_for('formViewBorrarCon') }}";
-      $.ajax({
-        type: "POST",
-        data: { id, nombreFoto },
-        url: urlForm,
-        success: function (resp) {
-          console.log(resp)
-          if (resp == 1) {
-            li.remove(); //remuevo el registro desde la lista
-            mensajeAlerta(msg='Registro Eliminado con éxito.', tipo=1); 
-          } else {
-            console.log('Error al intentar borrar el carro ');
-          }
-        }
-      });
-
-    }
-
-    function eliminaradJavaScript(id) {
-      const idR = document.querySelector('#id_'+ id);
-      nombreFoto = idR.dataset.foto;
-
-      let li = document.querySelector('#Registro_' + id);
-
-      var urlForm = "{{ url_for('formViewBorrarad') }}";
-      $.ajax({
-        type: "POST",
-        data: { id, nombreFoto },
-        url: urlForm,
-        success: function (resp) {
-          console.log(resp)
-          if (resp == 1) {
-            li.remove(); //remuevo el registro desde la lista
-            mensajeAlerta(msg='Registro Eliminado con éxito.', tipo=1); 
-          } else {
-            console.log('Error al intentar borrar el carro ');
-          }
-        }
-      });
-
-    }
+    
   </script>
 
 </body>

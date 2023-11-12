@@ -6,14 +6,17 @@
 
 <section>
     <h2>
-        <a href="/" class="left" title="Volver"><i class="bi bi-arrow-left-circle"></i></a>
+        <a href="/lcon" class="left" title="Volver"><i class="bi bi-arrow-left-circle"></i></a>
         Registrar Nuevo contenido (Imagen o video)
         <hr>
     </h2>
 
-    <form action="{{ url_for('formAddCon') }}" method="POST" class="mb-3" autocomplete="off" enctype="multipart/form-data">
+    <form action="{{ url_for('formAddcon') }}" method="POST" class="mb-3" autocomplete="off" enctype="multipart/form-data">
         <div class="row mt-4">
             <div class="col">
+                <label for="nombre">Titulo</label>
+                <input type="text" name="nombre" class="form-control" required>
+
                 <label for="foto">Contenido Multimedia</label>
                 <input type="file" name="foto" class="form-control-file" accept="image/*" required>
             </div>

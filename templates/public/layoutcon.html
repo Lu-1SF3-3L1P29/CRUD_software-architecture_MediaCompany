@@ -37,7 +37,7 @@
 
 
       <div class="col-md-12">
-        <a href="{{ url_for('addCon') }}" title="Registrar nuevo contenido"
+        <a href="{{ url_for('addcon') }}" title="Registrar nuevo contenido"
           class="btn btn-primary btn-lg btn-block btn-sm mb-2" >
           <i class="bi bi-boxes"></i>
           Nuevo Registro
@@ -58,13 +58,13 @@
   <script src="{{ url_for('static', filename ='assets/js/loader.js') }}"></script>
   <script>
 
-    function eliminarConJavaScript(id) {
+    function eliminarconJavaScript(id) {
       const idR = document.querySelector('#id_'+ id);
       nombreFoto = idR.dataset.foto;
 
       let li = document.querySelector('#Registro_' + id);
 
-      var urlForm = "{{ url_for('formViewBorrarCon') }}";
+      var urlForm = "{{ url_for('formViewBorrarcon') }}";
       $.ajax({
         type: "POST",
         data: { id, nombreFoto },

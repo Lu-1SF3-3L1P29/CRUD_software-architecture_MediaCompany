@@ -6,35 +6,37 @@
         <thead>
             <tr>
                 <th scope="col">#</th>
+                <th scope="col">Titulo</th>
                 <th scope="col">Contenido Multimedia</th>
                 <th scope="col">Acciones</th>
             </tr>
         </thead>
         <tbody>
             {% for con in miDatacon %}
-            {% with urlCon = '/static/assets/fotos_cont/' %}
+            {% with urlcon = '/static/assets/fotos_cont/' %}
             <tr id="Registro_{{ con.id }}">
                 <th scope="row">{{ loop.index }}</th>
+                <td>{{ con.nombre }}</td>
                 <td>
                     {% if(con.foto !="") %}
-                    <img src="{{ urlCon }}{{ con.foto }}" class="sin_foto_mini" alt="{{ con.id }}">
+                    <img src="{{ urlcon }}{{ con.foto }}" class="sin_foto_mini" alt="{{ con.id }}">
                     {% else %}
-                    <img src="{{ urlCon }}sin_foto.jpg" class="sin_foto_mini" alt="contenido multimedia">
+                    <img src="{{ urlcon }}sin_foto.jpg" class="sin_foto_mini" alt="contenido multimedia">
                     {% endif %}
                 </td>
                 <td width="300">
                     <span style="display: flex; justify-content:space-between;">
-                        <a href="{{ url_for('viewDetalleCon', idCon = son.id ) }}" type="button"
+                        <a href="{{ url_for('viewDetallecon', idcon = con.id ) }}" type="button"
                             class="btn btn-warning btn-sm" tooltip="Ver Registro">
                             <i class="bi bi-eye"></i>
                             Ver
                         </a>
-                        <a href="{{ url_for('formViewUpdate', id = con.id ) }}" class="btn btn-info btn-sm"
+                        <a href="{{ url_for('formViewUpdatecon', id = con.id ) }}" class="btn btn-info btn-sm"
                             tooltip="Actualizar Registro">
                             <i class="bi bi-arrow-clockwise"></i>
                             Actualizar
                         </a>
-                        <a href="#" id="id_{{ con.id }}" data-foto="{{ con.foto }}" onclick="eliminarConJavaScript('{{ con.id }}');" class="btn btn-danger btn-sm"
+                        <a href="#" id="id_{{ con.id }}" data-foto="{{ con.foto }}" onclick="eliminarconJavaScript('{{ con.id }}');" class="btn btn-danger btn-sm"
                             tooltip="Eliminar Registro">
                             <i class="bi bi-trash3"></i>
                             Eliminar
