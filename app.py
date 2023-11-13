@@ -1,7 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session
 from controller.controllerSub import *
 from controller.controllercon import *
 from controller.controllerad import *
+from flask_mysqldb import MySQL
+import MySQLdb.cursors
+import re
+import mysql.connector
 
 #Para subir archivo tipo foto al servidor
 import os
@@ -19,10 +23,15 @@ tipo =''
 
 app.config['SQLALCHEMY_DATABASE_URI']='mysql+pymysql://sql10658339:tI6ZDDAk7d@sql10.freesqldatabase.com/sql10658339'
 
+app.secret_key = 'AS_MediaCompany'
 
+
+@app.route('/', methods=['GET','POST'])
+def inicio():
+    return render_template('public/login.html')
 
 @app.route('/lsub', methods=['GET','POST'])
-def inicio():
+def inicioSub():
     return render_template('public/layout.html', miData = listaSub())
 
 @app.route('/about', methods=['GET','POST'])
@@ -78,7 +87,7 @@ def viewDetalleSub(idSub):
             return render_template('public/acciones/view.html', infoSub = resultData, msg='Detalles del Subcriptor', tipo=1)
         else:
             return render_template('public/acciones/layout.html', msg='No existe el subcriptor', tipo=1)
-    return redirect(url_for('inicio'))
+    return redirect(url_for('inicioSub'))
     
 
 @app.route('/actualizar-sub/<string:idSub>', methods=['POST'])
@@ -211,7 +220,7 @@ def viewDetallecon(idcon):
             return render_template('public/accionescontent/viewcon.html', infocon = resultData, msg='Detalles del contenido', tipo=1)
         else:
             return render_template('public/layoutcon.html', msg='No existe tal contenido', tipo=1)
-    return redirect(url_for('inicio'))
+    return redirect(url_for('iniciocon'))
     
 
 @app.route('/actualizar-con/<string:idcon>', methods=['POST'])
@@ -342,7 +351,7 @@ def viewDetallead(idad):
             return render_template('public/accionesad/viewad.html', infoad = resultData, msg='Detalles de la publicidad', tipo=1)
         else:
             return render_template('public/layoutad.html', msg='No existe tal publicidad', tipo=1)
-    return redirect(url_for('inicio'))
+    return redirect(url_for('inicioad'))
     
 
 @app.route('/actualizar-ad/<string:idad>', methods=['POST'])
@@ -428,7 +437,63 @@ def not_found(error):
     
     
     
-    
+@app.route('/login', methods =['GET', 'POST'])
+def login():
+    mesage = ''
+    if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
+        email = request.form['email']
+        password = request.form['password']
+        conexion_MySQLdb = connectionBD()
+        cursor = conexion_MySQLdb.cursor(dictionary=True)
+        cursor.execute('SELECT * FROM user WHERE email = %s AND password = %s', (email, password, ))
+        user = cursor.fetchone()
+        if user:
+            session['loggedin'] = True
+            session['userid'] = user['userid']
+            session['name'] = user['name']
+            session['email'] = user['email']
+            mesage = 'Logged in successfully !'
+            return render_template('public/layout.html', mesage = mesage)
+        else:
+            mesage = 'Please enter correct email / password !'
+    return render_template('public/login.html', mesage = mesage)
+
+@app.route('/logout')
+def logout():
+    session.pop('loggedin', None)
+    session.pop('userid', None)
+    session.pop('email', None)
+    return redirect(url_for('login'))
+
+@app.route('/register', methods =['GET', 'POST'])
+def register():
+    mesage = ''
+    if request.method == 'POST' and 'name' in request.form and 'password' in request.form and 'email' in request.form :
+        userName = request.form['name']
+        password = request.form['password']
+        email = request.form['email']
+        conexion_MySQLdb = connectionBD()
+        cursor = conexion_MySQLdb.cursor(dictionary=True)
+        cursor.execute('SELECT * FROM user WHERE email = %s', (email, ))
+        account = cursor.fetchone()
+        if account:
+            mesage = 'Account already exists !'
+        elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+            mesage = 'Invalid email address !'
+        elif not userName or not password or not email:
+            mesage = 'Please fill out the form !'
+        else:
+            cursor.execute('INSERT INTO user VALUES (NOT NULL, %s, %s, %s)', (userName, email, password, ))
+            conexion_MySQLdb.commit()
+            cursor.close() #Cerrando conexion SQL
+            conexion_MySQLdb.close() #cerrando conexion de la BD
+            mesage = 'You have successfully registered !'
+    elif request.method == 'POST':
+        mesage = 'Please fill out the form !'
+    return render_template('public/register.html', mesage = mesage)
+
+
+
 ##if __name__ == '__main__':
     ##app.run(host='0.0.0.0', port=10000, debug=True)
 
